@@ -1,0 +1,71 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+  createdAt DateTime @default(now()) @map("created_at")
+  updateAt DateTime @updatedAt @map("update_at")
+
+  username String
+  email String @unique
+  hash String
+  description String?
+
+  @@map("users")
+}
+
+model Theater {
+  id Int @id @default(autoincrement())
+  name String
+  url String
+
+  screenings Screening[]
+
+  @@map("theaters")
+}
+
+model Movie {
+  id Int @id @default(autoincrement())
+  title String
+  yearRelease Int? @map("year_release")
+  imdbId String? @map("imdb_id")
+  runtime String?
+  overview String?
+  genre String?
+  director String?
+  poster String?
+  backdrop String?
+  metascoreRating String? @map("metascore_rating")
+  imdbRating String? @map("imdb_rating")
+
+  screenings Screening[]
+
+  @@map("movies")
+}
+
+model Screening {
+  id Int @id @default(autoincrement())
+  movieId Int @map("id_movie")
+  theaterId Int @map("id_theater")
+  day DateTime
+  hour DateTime
+  lang String?
+
+  theater Theater @relation(fields: [theaterId], references: [id])
+  movie Movie @relation(fields: [movieId], references: [id])
+
+  @@map("screenings")
+}
