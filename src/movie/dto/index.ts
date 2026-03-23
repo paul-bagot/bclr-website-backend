@@ -1,1 +1,1 @@
-export * from "./ceatemovie.dto"
+export * from './ceatemovie.dto';

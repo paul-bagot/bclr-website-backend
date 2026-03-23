@@ -1,20 +1,19 @@
-import { Body, Controller, Get, Post } from "@nestjs/common";
-import { CreateMovieDto } from "./dto";
-import { MovieService } from "./movie.service";
-import { Movie } from "@prisma/client";
+import { Body, Controller, Get, Post } from '@nestjs/common';
+import { CreateMovieDto } from './dto';
+import { MovieService } from './movie.service';
+import { Movie } from '@prisma/client';
 
-@Controller("/movies")
+@Controller('movies')
 export class MovieController {
+	constructor(private movieService: MovieService) {}
 
-    constructor(private movieService : MovieService) {}
+	@Get('/all')
+	async findAll() {
+		return await this.movieService.findAll();
+	}
 
-    @Get("/all")
-    async findAll() {
-        return await this.movieService.findAll();
-    }
-
-    @Post("/create")
-    async createOne(@Body() dto : CreateMovieDto) {
-        return this.movieService.createOne(dto);
-    }
+	@Post('/create')
+	async createOne(@Body() dto: CreateMovieDto) {
+		return this.movieService.createOne(dto);
+	}
 }
