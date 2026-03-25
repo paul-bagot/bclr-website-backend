@@ -9,7 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    env: 
+    env:
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
     steps:
     - name: Checkout
@@ -30,9 +30,18 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GHP_TOKEN }}
-    - name: Build and push
+
+    - name: Build and push migration image
       uses: docker/build-push-action@v7
       with:
         context: "."
+        dockerfile: ./docker/Dockerfile.migrate
+        push: true
+        tags: ghcr.io/${{ github.actor }}/backend-nestjs-migration:latest
+    - name: Build and push production image
+      uses: docker/build-push-action@v7
+      with:
+        context: "."
+        dockerfile: ./docker/Dockerfile.backend
         push: true
         tags: ghcr.io/${{ github.actor }}/backend-nestjs:latest

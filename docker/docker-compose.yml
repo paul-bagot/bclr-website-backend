@@ -1,0 +1,38 @@
+version: '3.8'
+services:
+  dev-db:
+    image: postgres:15-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_DB: bclr-website
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123
+    networks:
+      - bclr
+
+  dev-migration:
+    image: ghcr.io/paul-bagot/backend-nestjs
+    env_file:
+      - .env.test
+    networks:
+      - bclr
+    depends_on:
+      - dev-db
+    entrypoint: >
+      sh -c "npm install prisma --no-save && npx prisma migrate deploy"
+    restart: "no"
+
+  dev-nestjs:
+    image: ghcr.io/paul-bagot/backend-nestjs
+    ports:
+      - 3000:3000
+    env_file:
+      - .env.test
+    networks:
+      - bclr
+    depends_on:
+      - dev-migration
+networks:
+  bclr:
