@@ -1,4 +1,4 @@
-FROM node:20-slim
+FROM node:alpine
 WORKDIR /app
 
 COPY node_modules/@prisma/client ./node_modules/@prisma/client
