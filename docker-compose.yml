@@ -13,15 +13,13 @@ services:
       - bclr
 
   dev-migration:
-    image: ghcr.io/paul-bagot/backend-nestjs
+    image: ghcr.io/paul-bagot/backend-nestjs-migrate
     env_file:
       - .env.test
     networks:
       - bclr
     depends_on:
       - dev-db
-    entrypoint: >
-      sh -c "npm install prisma --no-save && npx prisma migrate deploy"
     restart: "no"
 
   dev-nestjs:
