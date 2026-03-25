@@ -37,7 +37,7 @@ jobs:
         context: "."
         file: Dockerfile.migrate
         push: true
-        tags: ghcr.io/${{ github.actor }}/backend-nestjs-migration:latest
+        tags: ghcr.io/${{ github.actor }}/backend-nestjs-migrate:latest
     - name: Build and push production image
       uses: docker/build-push-action@v7
       with:
