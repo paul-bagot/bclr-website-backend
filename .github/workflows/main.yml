@@ -28,3 +28,9 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GHP_TOKEN }}
+    - name: Build and push
+      uses: docker/build-push-action@v7
+      with:
+        context: "."
+        push: true
+        tags: bclr/backend-nestjs:latest
