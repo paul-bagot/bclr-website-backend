@@ -1,0 +1,36 @@
+on:
+  pull_request:
+    branches:
+    - main
+  push:
+    branches:
+    - ci-test
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Login to Github Package
+      uses: docker/login-action@v4
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GHP_TOKEN }}
+    - name: Pull image from Github Package
+      run: docker pull ghcr.io/${{ github.actor }}/backend-nestjs:staging
+    - name: Tag image with staging tag
+      run: docker tag ghcr.io/${{ github.actor }}/backend-nestjs:staging ghcr.io/${{ github.actor }}/backend-nestjs:latest
+    - name: Push staging image to Github Package
+      run: docker push ghcr.io/${{ github.actor }}/backend-nestjs:latest
+  
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Execute remote SSH commands using SSH key
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        key: ${{ secrets.VPS_KEY }}
+        port: ${{ secrets.VPS_PORT }}
+        script: ./deploy-bclr-website
