@@ -45,3 +45,15 @@ jobs:
         file: Dockerfile.backend
         push: true
         tags: ghcr.io/${{ github.actor }}/backend-nestjs:latest
+        
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Execute remote SSH commands using SSH key
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        key: ${{ secrets.VPS_KEY }}
+        port: ${{ secrets.VPS_PORT }}
+        script: touch test-deploy
