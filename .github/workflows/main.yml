@@ -1,3 +1,5 @@
+name: Main Pipeline CI / CD
+
 on:
   pull_request:
     branches:
@@ -33,4 +35,4 @@ jobs:
         username: ${{ secrets.VPS_USERNAME }}
         key: ${{ secrets.VPS_KEY }}
         port: ${{ secrets.VPS_PORT }}
-        script: ./deploy-bclr-website
+        script: ${{ secrets.SCRIPT_PATH }}
