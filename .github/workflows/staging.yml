@@ -39,7 +39,7 @@ jobs:
         context: "."
         file: Dockerfile.migrate
         push: true
-        tags: ghcr.io/${{ github.actor }}/backend-nestjs-migrate:${{ github.sha }} 
+        tags: ghcr.io/${{ github.actor }}/backend-migrate:${{ github.sha }} 
     - name: Build and push production image
       uses: docker/build-push-action@v7
       with:
@@ -66,8 +66,8 @@ jobs:
       run: docker push ghcr.io/${{ github.actor }}/backend-nestjs:staging
 
     - name: Pull migrate image from Github Package
-      run: docker pull ghcr.io/${{ github.actor }}/backend-nestjs-migrate:${{ github.sha }}
+      run: docker pull ghcr.io/${{ github.actor }}/backend-migrate:${{ github.sha }}
     - name: Tag migrate image with staging tag
-      run: docker tag ghcr.io/${{ github.actor }}/backend-nestjs-migrate:${{ github.sha }} ghcr.io/${{ github.actor }}/backend-nestjs-migrate:staging
+      run: docker tag ghcr.io/${{ github.actor }}/backend-migrate:${{ github.sha }} ghcr.io/${{ github.actor }}/backend-migrate:staging
     - name: Push staging image to Github Package
-      run: docker push ghcr.io/${{ github.actor }}/backend-nestjs-migrate:staging
+      run: docker push ghcr.io/${{ github.actor }}/backend-migrate:staging
