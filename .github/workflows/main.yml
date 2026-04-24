@@ -1,0 +1,46 @@
+name: Main Pipeline CI / CD
+
+on:
+  pull_request:
+    branches:
+    - main
+  push:
+    branches:
+    - ci-test
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Login to Github Package
+      uses: docker/login-action@v4
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GHP_TOKEN }}
+    - name: Pull nestjs staging image from Github Package
+      run: docker pull ghcr.io/${{ github.actor }}/backend-nestjs:staging
+    - name: Tag nestjs staging image with latest tag
+      run: docker tag ghcr.io/${{ github.actor }}/backend-nestjs:staging ghcr.io/${{ github.actor }}/backend-nestjs:latest
+    - name: Push latest nestjs image to Github Package
+      run: docker push ghcr.io/${{ github.actor }}/backend-nestjs:latest
+
+    - name: Pull migrate staging image from Github Package
+      run: docker pull ghcr.io/${{ github.actor }}/backend-migrate:staging
+    - name: Tag migrate staging image with latest tag
+      run: docker tag ghcr.io/${{ github.actor }}/backend-migrate:staging ghcr.io/${{ github.actor }}/backend-migrate:latest
+    - name: Push latest migrate image to Github Package
+      run: docker push ghcr.io/${{ github.actor }}/backend-migrate:latest
+  
+  deploy:
+    runs-on: ubuntu-latest
+    needs: tag
+    steps:
+    - name: Execute remote SSH commands using SSH key
+      uses: appleboy/ssh-action@v1
+      with:
+        host: ${{ secrets.VPS_HOST }}
+        username: ${{ secrets.VPS_USERNAME }}
+        key: ${{ secrets.VPS_KEY }}
+        port: ${{ secrets.VPS_PORT }}
+        script: ${{ secrets.SCRIPT_PATH }}
