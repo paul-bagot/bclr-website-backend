@@ -58,9 +58,16 @@ jobs:
         registry: ghcr.io
         username: ${{ github.actor }}
         password: ${{ secrets.GHP_TOKEN }}
-    - name: Pull image from Github Package
+    - name: Pull nestjs image from Github Package
       run: docker pull ghcr.io/${{ github.actor }}/backend-nestjs:${{ github.sha }}
-    - name: Tag image with staging tag
+    - name: Tag nestjs image with staging tag
       run: docker tag ghcr.io/${{ github.actor }}/backend-nestjs:${{ github.sha }} ghcr.io/${{ github.actor }}/backend-nestjs:staging
     - name: Push staging image to Github Package
       run: docker push ghcr.io/${{ github.actor }}/backend-nestjs:staging
+
+    - name: Pull migrate image from Github Package
+      run: docker pull ghcr.io/${{ github.actor }}/backend-nestjs-migrate:${{ github.sha }}
+    - name: Tag migrate image with staging tag
+      run: docker tag ghcr.io/${{ github.actor }}/backend-nestjs-migrate:${{ github.sha }} ghcr.io/${{ github.actor }}/backend-nestjs-migrate:staging
+    - name: Push staging image to Github Package
+      run: docker push ghcr.io/${{ github.actor }}/backend-nestjs-migrate:staging
